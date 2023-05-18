@@ -1,0 +1,69 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mattheh-poi-gateway-app-dev
+  annotations:
+    argocd/app-name: mattheh-poi-gateway-app-dev
+    backstage.io/kubernetes-id: mattheh-poi-gateway-app-dev
+    backstage.io/kubernetes-namespace: mattheh
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/instance=mattheh-poi-gateway-app-dev'
+    backstage.io/techdocs-ref: dir:.
+    janus-idp.io/tekton-enabled : 'false'
+    github.com/project-slug: Summit23Janus1/mattheh-gateway
+  tags:
+    - java
+    - quarkus
+    - maven
+    - workshop
+  links:
+    - url: https://console-openshift-console.apps.summit23rock.n26o.p1.openshiftapps.com/dev-pipelines/ns/mattheh/
+      title: Pipelines
+      icon: web
+    - url: https://console-openshift-console.apps.summit23rock.n26o.p1.openshiftapps.com/k8s/ns/mattheh/deployments/poi-gateway-app
+      title: Deployment
+      icon: web
+    - url: https://devspaces.apps.summit23rock.n26o.p1.openshiftapps.com/#https://github.com/Summit23Janus1/mattheh-gateway?che-editor=che-incubator/che-code/latest&devfilePath=.devfile-vscode.yaml
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: "user:default/mattheh"
+  system: workshop-system-mattheh
+  providesApis:
+    - gateway-api-mattheh
+  consumesApis:
+    - backend-api-mattheh
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: workshop-system-mattheh
+  tags:
+    - backstage
+    - janus-idp
+    - openshift
+    - workshop
+    - rh-summit
+spec:
+  owner: "user:default/mattheh"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: gateway-api-mattheh
+  description: API surface exposed to interact with Backends (summit POIs + parks data) via the Gateway
+  links:
+    - url: http://poi-gateway-app-mattheh.apps.summit23rock.n26o.p1.openshiftapps.com/q/swagger-ui
+      title: Swagger UI
+      icon: web
+    - url: https://github.com/Summit23Janus1/mattheh-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
+      title: API Spec
+      icon: code
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "user:default/mattheh"
+  system: workshop-system-mattheh
+  definition:
+    $text: https://github.com/Summit23Janus1/mattheh-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
